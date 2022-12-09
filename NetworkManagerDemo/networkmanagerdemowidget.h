@@ -10,6 +10,7 @@
 //#include <QDebug>
 //#include <QXmlStreamReader>
 #include <QTextCodec>
+#include <QDateTime>
 
 namespace Ui {
 class NetworkManagerDemoWidget;

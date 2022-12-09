@@ -13,5 +13,4 @@ SOURCES += main.cpp\
 
 HEADERS  += networkmanagerdemowidget.h
 
-FORMS    += networkmanagerdemowidget.ui \
-    dialog.ui
+FORMS    += networkmanagerdemowidget.ui

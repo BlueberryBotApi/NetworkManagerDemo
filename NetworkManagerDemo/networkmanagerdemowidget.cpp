@@ -20,14 +20,23 @@ NetworkManagerDemoWidget::~NetworkManagerDemoWidget() {
 void NetworkManagerDemoWidget::onGo() {
     //ui->lbStatus->setText( "Working..." );
     QString dataOfvalue=ui->dataOfsearch->text().trimmed();//считывем дату
-    ForOneCheck+=dataOfvalue;// добавляем ее к url
-    m_manager.get( QNetworkRequest( QUrl(ForOneCheck ) ));//делаем запрос
+
+
+    QDate setTime = QDate::fromString (dataOfvalue,"dd.MM.yyyy");
+    QDate datat= QDate::currentDate();
+    if(setTime > QDate::currentDate())
+    {
+        ui->errorString->setText(QString("Введите приемлимую дату"));
+    }
+
+   // ForOneCheck+=dataOfvalue;// добавляем ее к url
+    m_manager.get( QNetworkRequest( QUrl(ForOneCheck + dataOfvalue) ));//делаем запрос
 }
 
 void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
     if( reply->error() == QNetworkReply::NoError ) {
         QString nameOfValue = ui->edUrl->text().trimmed();//считываем валюту, которую необходимо найти
-        QString value;
+        QString value="";
 
         QByteArray dataXml = (reply->readAll());/////////////////////////////////////////////////////////////меняем кодировку
          QByteArray dataXml1;
@@ -38,13 +47,21 @@ void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
 
         dataXml=codec_utf8->fromUnicode(string);/////////////////////////////////////////////////////////////
 
-         int i = string.indexOf(nameOfValue);// ищем первое вхождение имени валюты
-         i +=nameOfValue.length()+14;//добавляем ее длинну и суммарное количество символов в тегах, до значения валюты
-         while(string[i]!="<")// пока не встретим конец записи - записывает значение в строку
+        int i = string.indexOf(nameOfValue);// ищем первое вхождение имени валюты
+         if(i!=-1)
          {
-             value+=string[i];
-             i++;
+             i +=nameOfValue.length()+14;//добавляем ее длинну и суммарное количество символов в тегах, до значения валюты
+             while(string[i]!="<")// пока не встретим конец записи - записывает значение в строку
+             {
+                 value+=string[i];
+                 i++;
+             }
          }
+         else
+         {
+              ui->errorString->setText(QString("Данной Валюты нет в списке"));
+         }
+
 //        QXmlStreamReader xmlDoc(dataXml);
 //        while (!xmlDoc.atEnd() && !xmlDoc.hasError()) {
 //            //data+=xmlDoc.readElementText();
@@ -77,8 +94,10 @@ void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
 //          }
 //        }
         ui->textEdit->setText(value);// выводим строку на экран
+
     } else {
-        ui->textEdit->setText( reply->errorString() );
+        ui->errorString->setText( reply->errorString() );
     }
    reply->deleteLater();
+
 }
