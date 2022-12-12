@@ -1,16 +1,8 @@
 #ifndef NETWORKMANAGERDEMOWIDGET_H
 #define NETWORKMANAGERDEMOWIDGET_H
 
+#include "currency.h"
 
-#include <QWidget>
-#include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QUrl>
-//#include <QDebug>
-//#include <QXmlStreamReader>
-#include <QTextCodec>
-#include <QDateTime>
 
 namespace Ui {
 class NetworkManagerDemoWidget;
@@ -28,10 +20,12 @@ private slots:
     void onFinished( QNetworkReply* reply );
 
 private:
+    Currency* ForCodesANDCurrecyNames;
     Ui::NetworkManagerDemoWidget* ui;
     QString ForOneCheck = "http://www.cbr.ru/scripts/XML_daily.asp?date_req=";
     QNetworkAccessManager m_manager;
 
 };
+
 
 #endif // NETWORKMANAGERDEMOWIDGET_H
