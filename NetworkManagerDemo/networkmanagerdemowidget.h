@@ -18,11 +18,11 @@ public:
 private slots:
     void onGo();
     void onFinished( QNetworkReply* reply );
-
+    void makeComboBox(QMap<QString,QString> map);
 private:
     Currency* ForCodesANDCurrecyNames;
     Ui::NetworkManagerDemoWidget* ui;
-    QString ForOneCheck = "http://www.cbr.ru/scripts/XML_daily.asp?date_req=";
+    QString ForOneCheck = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=";
     QNetworkAccessManager m_manager;
 
 };

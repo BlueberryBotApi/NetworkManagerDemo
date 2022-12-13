@@ -1,6 +1,6 @@
 #include "currency.h"
 #include "QThread"
-
+#include "networkmanagerdemowidget.h"
 
 Currency::Currency(QWidget *parent)
     : QWidget{parent}
@@ -9,15 +9,16 @@ Currency::Currency(QWidget *parent)
     this->codesOfCurrensy = QMap <QString,QString>();
     this->networkManager = new QNetworkAccessManager();
 
+   // connect(this,SIGNAL(&Currency::QMapIsReady),&NetworkManagerDemoWidget,SLOT(NetworkManagerDemoWidget::makeComboBox(QMap<Q>)));
     connect( this->networkManager, SIGNAL(finished(QNetworkReply*)),SLOT( onFinished(QNetworkReply*)) );
-    networkManager->get(QNetworkRequest(this->link));
+
 }
 Currency::~Currency()
 {
     delete networkManager;
 }
 
-void Currency::onFinished(QNetworkReply *reply) {
+QMap<QString,QString> Currency::onFinished(QNetworkReply *reply) {
     ///this->isFinished = false;
 
     if( reply->error() != QNetworkReply::NoError )
@@ -61,22 +62,22 @@ void Currency::onFinished(QNetworkReply *reply) {
 
     reply->deleteLater();
    // this->isFinished = true;
+    emit QMapIsReady(codesOfCurrensy);
+    return codesOfCurrensy;
 }
 
-QStringList Currency::takeXSDScheme()
+void Currency::takeXSDScheme()
 {
     networkManager->get(QNetworkRequest(this->link));
 
-    while (this->codesOfCurrensy.empty())
-    {
-        QThread::msleep(1000);
-    }
+//    while (this->codesOfCurrensy.empty())
+//    {
+//        QThread::msleep(1000);
+//    }
 
-    auto list = QStringList();
-    for (auto it = this->codesOfCurrensy.begin(); it != this->codesOfCurrensy.end(); it++)
-    {
-        list.append(it.key());
-    }
-
-    return list;
+//    auto list = QStringList();
+//    for (auto it = this->codesOfCurrensy.begin(); it != this->codesOfCurrensy.end(); it++)
+//    {
+//        list.append(it.key());
+//    }
 }

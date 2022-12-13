@@ -21,10 +21,12 @@ public:
     QMap <QString,QString> codesOfCurrensy;
 
 public:
-    QStringList takeXSDScheme();
+    void takeXSDScheme();
 
 private slots:
-    void onFinished(QNetworkReply* reply);
+    QMap<QString,QString> onFinished(QNetworkReply* reply);
+signals:
+    void QMapIsReady(QMap<QString,QString>);
 
 private:
     QNetworkAccessManager* networkManager;

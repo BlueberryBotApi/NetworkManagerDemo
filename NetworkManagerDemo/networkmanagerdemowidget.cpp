@@ -8,12 +8,14 @@ NetworkManagerDemoWidget::NetworkManagerDemoWidget( QWidget* parent ) :
     QWidget( parent ),
     ui( new Ui::NetworkManagerDemoWidget ) {
     ui->setupUi( this );
+    ui->bnFind->setEnabled(false);
     ui->calendarWidget->setMaximumDate(QDate::currentDate());
     ui->calendarWidget_2->setMaximumDate(QDate::currentDate());
-    Currency* curr = new Currency();
-    //ui->comboBox->addItems(curr->takeXSDScheme());
-    delete curr;
+    //Currency* curr = new Currency();
+    this->ForCodesANDCurrecyNames = new Currency();
+    ForCodesANDCurrecyNames->takeXSDScheme();
 
+    connect(ForCodesANDCurrecyNames,&Currency::QMapIsReady,this,&NetworkManagerDemoWidget::makeComboBox);
     connect( ui->bnFind, SIGNAL( clicked(bool) ), SLOT( onGo() ) );
     connect( &m_manager, SIGNAL( finished(QNetworkReply*) ), SLOT( onFinished(QNetworkReply*) ) );
 }
@@ -27,7 +29,8 @@ void NetworkManagerDemoWidget::onGo() {
     //ui->lbStatus->setText( "Working..." );
     QString StartDateOfvalue=ui->calendarWidget->selectedDate().toString();//считывем дату
     QString EndDateOfvalue=ui->calendarWidget_2->selectedDate().toString();
-    m_manager.get( QNetworkRequest( QUrl(ForOneCheck + StartDateOfvalue) ));//делаем запрос
+
+    m_manager.get( QNetworkRequest( QUrl(ForOneCheck + StartDateOfvalue+"&date_req2="+EndDateOfvalue+"&VAL_NM_RQ=") ));//делаем запрос
 }
 
 void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
@@ -62,4 +65,10 @@ void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
     }
    reply->deleteLater();
 
+}
+
+void NetworkManagerDemoWidget::makeComboBox(QMap<QString,QString> map)
+{
+    ui->comboBox->addItems(ForCodesANDCurrecyNames->codesOfCurrensy.keys());
+    ui->bnFind->setEnabled(true);
 }
