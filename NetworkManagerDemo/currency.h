@@ -12,11 +12,11 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <QStringList>
-class Currency: public QWidget{
+class Currency: public QObject {
     Q_OBJECT
 
 public:
-    explicit Currency(QWidget* parent = 0);
+    explicit Currency(QObject * parent = 0);
     ~Currency();
     QMap <QString,QString> codesOfCurrensy;
 

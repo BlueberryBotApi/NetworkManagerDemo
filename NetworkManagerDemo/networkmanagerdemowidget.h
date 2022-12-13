@@ -19,7 +19,9 @@ private slots:
     void onGo();
     void onFinished( QNetworkReply* reply );
     void makeComboBox(QMap<QString,QString> map);
+    void makeTable(QMap<QString,QString> map);
 private:
+    QMap <QString,QString> dateAndCurrencyNamesForTable;
     Currency* ForCodesANDCurrecyNames;
     Ui::NetworkManagerDemoWidget* ui;
     QString ForOneCheck = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=";

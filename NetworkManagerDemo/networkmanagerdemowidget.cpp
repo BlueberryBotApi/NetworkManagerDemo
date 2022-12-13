@@ -11,7 +11,8 @@ NetworkManagerDemoWidget::NetworkManagerDemoWidget( QWidget* parent ) :
     ui->bnFind->setEnabled(false);
     ui->calendarWidget->setMaximumDate(QDate::currentDate());
     ui->calendarWidget_2->setMaximumDate(QDate::currentDate());
-    //Currency* curr = new Currency();
+
+    this->dateAndCurrencyNamesForTable =  QMap <QString,QString>();
     this->ForCodesANDCurrecyNames = new Currency();
     ForCodesANDCurrecyNames->takeXSDScheme();
 
@@ -27,48 +28,75 @@ NetworkManagerDemoWidget::~NetworkManagerDemoWidget() {
 
 void NetworkManagerDemoWidget::onGo() {
     //ui->lbStatus->setText( "Working..." );
-    QString StartDateOfvalue=ui->calendarWidget->selectedDate().toString();//считывем дату
-    QString EndDateOfvalue=ui->calendarWidget_2->selectedDate().toString();
-
-    m_manager.get( QNetworkRequest( QUrl(ForOneCheck + StartDateOfvalue+"&date_req2="+EndDateOfvalue+"&VAL_NM_RQ=") ));//делаем запрос
+    ui->bnFind->setEnabled(false);
+    QString StartDateOfvalue=ui->calendarWidget->selectedDate().toString("dd/MM/yyyy");//считывем дату указывая формат
+    QString EndDateOfvalue=ui->calendarWidget_2->selectedDate().toString("dd/MM/yyyy");
+    QString nameOfCurrency = ui->comboBox->currentText();
+    m_manager.get( QNetworkRequest( QUrl(ForOneCheck + StartDateOfvalue+"&date_req2="+EndDateOfvalue+"&VAL_NM_RQ="+ForCodesANDCurrecyNames->codesOfCurrensy[nameOfCurrency]) ));//делаем запрос
 }
 
 void NetworkManagerDemoWidget::onFinished( QNetworkReply* reply ) {
     if( reply->error() == QNetworkReply::NoError ) {
-        QString nameOfValue = "";//ui->edUrl->text().trimmed();//считываем валюту, которую необходимо найти
-        QString value="";
-
         QByteArray dataXml = (reply->readAll());/////////////////////////////////////////////////////////////меняем кодировку
         QTextCodec *codec_1251 = QTextCodec::codecForName("cp-1251");
-
         QString string = codec_1251->toUnicode(dataXml);
-
-        int i = string.indexOf(nameOfValue);// ищем первое вхождение имени валюты
-         if(i!=-1)
-         {
-             i +=nameOfValue.length()+14;//добавляем ее длину и суммарное количество символов в тегах, до значения валюты
-             while(string[i]!="<")// пока не встретим конец записи - записывает значение в строку
-             {
-                 value+=string[i];
-                 i++;
-             }
-         }
-         else
-         {
-              ui->errorString->setText(QString("Данной Валюты нет в списке"));
-         }
-
-        ui->textEdit->setText(value);// выводим строку на экран
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////парсим
+        QString buf,date;
+            int i=0,j=0;
+        while(i!=-1)
+        {
+            buf="";
+            i = string.indexOf("Record Date",j);
+            if(i!=-1)
+            {
+                i+=13;
+                while(string[i]!='"')
+                {
+                    buf+=string[i];
+                    i++;
+                }
+                j=i;
+                date = buf;
+                buf="";
+                i = string.indexOf("Value",j);
+                i+=6;
+                while(string[i]!='<')
+                {
+                    buf+=string[i];
+                    i++;
+                }
+                this->dateAndCurrencyNamesForTable[date]=buf;
+                j=i;
+            }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
     } else {
         ui->errorString->setText( reply->errorString() );
     }
-   reply->deleteLater();
-
+    reply->deleteLater();
+    this->makeTable(dateAndCurrencyNamesForTable);
 }
 
 void NetworkManagerDemoWidget::makeComboBox(QMap<QString,QString> map)
 {
     ui->comboBox->addItems(ForCodesANDCurrecyNames->codesOfCurrensy.keys());
+    ui->bnFind->setEnabled(true);
+}
+void NetworkManagerDemoWidget::makeTable(QMap<QString,QString> map)
+{
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0);
+
+        QMap<QString, QString>::const_iterator i = map.constBegin();
+        while (i != map.constEnd()) {
+            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
+            QTableWidgetItem *newItem = new QTableWidgetItem();
+            newItem->setText(i.key());
+            ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, 0, newItem);
+            newItem = new QTableWidgetItem();
+            newItem->setText(i.value());
+            ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, 1, newItem);
+            ++i;
+        }
     ui->bnFind->setEnabled(true);
 }

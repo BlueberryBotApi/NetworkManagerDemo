@@ -1,15 +1,11 @@
 #include "currency.h"
-#include "QThread"
 #include "networkmanagerdemowidget.h"
 
-Currency::Currency(QWidget *parent)
-    : QWidget{parent}
+Currency::Currency(QObject  *parent)
+    : QObject {parent}
 {
-
     this->codesOfCurrensy = QMap <QString,QString>();
     this->networkManager = new QNetworkAccessManager();
-
-   // connect(this,SIGNAL(&Currency::QMapIsReady),&NetworkManagerDemoWidget,SLOT(NetworkManagerDemoWidget::makeComboBox(QMap<Q>)));
     connect( this->networkManager, SIGNAL(finished(QNetworkReply*)),SLOT( onFinished(QNetworkReply*)) );
 
 }
@@ -23,13 +19,14 @@ QMap<QString,QString> Currency::onFinished(QNetworkReply *reply) {
 
     if( reply->error() != QNetworkReply::NoError )
     {
-        qDebug()<<( reply->errorString() );
+        qDebug()<< reply->errorString() ;
         reply->deleteLater();
     }
 
     QByteArray dataXml = (reply->readAll());///////////////////меняем кодировку
     QTextCodec *codec_1251 = QTextCodec::codecForName("cp-1251");
     QString string = codec_1251->toUnicode(dataXml);
+
     int i=0,j=0;
     QString name;
     QString buf;
@@ -69,15 +66,4 @@ QMap<QString,QString> Currency::onFinished(QNetworkReply *reply) {
 void Currency::takeXSDScheme()
 {
     networkManager->get(QNetworkRequest(this->link));
-
-//    while (this->codesOfCurrensy.empty())
-//    {
-//        QThread::msleep(1000);
-//    }
-
-//    auto list = QStringList();
-//    for (auto it = this->codesOfCurrensy.begin(); it != this->codesOfCurrensy.end(); it++)
-//    {
-//        list.append(it.key());
-//    }
 }
