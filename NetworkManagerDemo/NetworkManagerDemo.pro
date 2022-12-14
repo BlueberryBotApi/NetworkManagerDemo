@@ -7,10 +7,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        currency.cpp \
-        networkmanagerdemowidget.cpp
+        currencyParser.cpp \
+        currencyWidget.cpp
 
-HEADERS  += networkmanagerdemowidget.h \
-    currency.h
+HEADERS  += \
+    currencyParser.h \
+    currencyWidget.h
 
-FORMS    += networkmanagerdemowidget.ui
+FORMS    += \
+    currencyWidget.ui

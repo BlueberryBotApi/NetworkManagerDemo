@@ -1,10 +1,10 @@
-#include "networkmanagerdemowidget.h"
+#include "currencyWidget.h"
 #include <QApplication>
 
 int main( int argc, char* argv[] ) {
 
     QApplication a( argc, argv );
-    NetworkManagerDemoWidget w;
+    CurrencyWidget w;
 
     w.show();
 
