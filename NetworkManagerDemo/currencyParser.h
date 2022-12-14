@@ -16,14 +16,14 @@ class CurrencyParser: public QObject {
     Q_OBJECT
 
 public:
-    explicit CurrencyParser(QObject* parent = 0);
+    explicit CurrencyParser(QObject* parent = nullptr);
     ~CurrencyParser();
     QMap <QString,QString> currencyCodes;
-    QMap <QString,QString> quoteByDate;
+    QMap <QDate,QString> quoteByDate;
 
 public:
     void sendCurrencyRequest();
-    void sendQuoteRequest(QString startDateOfvalue, QString endDateOfvalue, QString nameOfCurrency);
+    void sendQuoteRequest(QString &startDateOfvalue, QString &endDateOfvalue, QString &nameOfCurrency);
 
 private:
     QString xmlToString(QByteArray xml);
@@ -34,7 +34,7 @@ private slots:
 
 signals:
     void CurrencyIsReady(QMap<QString,QString>);
-    void QuoteIsReady(QMap<QString,QString>);
+    void QuoteIsReady(QMap<QDate,QString>);
 
 private:
     QNetworkAccessManager* pNetworkManager;

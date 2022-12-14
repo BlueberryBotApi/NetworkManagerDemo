@@ -13,7 +13,7 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
     ui->calendarWidget->setMaximumDate(QDate::currentDate());
     ui->calendarWidget_2->setMaximumDate(QDate::currentDate());
 
-    this->quoteByDate = QMap<QString,QString>();
+    this->quoteByDate = QMap<QDate,QString>();
 
     this->pCurrencyParser = new CurrencyParser();
     pCurrencyParser->sendCurrencyRequest();
@@ -31,7 +31,6 @@ CurrencyWidget::~CurrencyWidget() {
 void CurrencyWidget::onCurrencyMapIsReady(QMap<QString,QString> map)
 {
     this->currencyCodes = map;
-
     this->makeComboBox();
 }
 
@@ -47,10 +46,8 @@ void CurrencyWidget::onGo() {
     this->pCurrencyParser->sendQuoteRequest(StartDateOfvalue, EndDateOfvalue, nameOfCurrency);
 }
 
-void CurrencyWidget::onQuoteMapIsReady(QMap<QString,QString> map) {
+void CurrencyWidget::onQuoteMapIsReady(QMap<QDate,QString> map) {
     this->quoteByDate = map;
-    this->pCurrencyParser->quoteByDate = QMap<QString,QString>();
-
     this->makeTable();
 }
 
@@ -68,12 +65,12 @@ void CurrencyWidget::makeTable()
     {
         ui->errorString->setText("Значения данной валюты отсутсвуют в выбранном временном промежутке");
     }
-    QMap<QString, QString>::const_iterator i;
+    QMap<QDate, QString>::const_iterator i;
     for (i = this->quoteByDate.constBegin(); i != this->quoteByDate.constEnd(); i++) {
         ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
 
         QTableWidgetItem* newItem = new QTableWidgetItem();
-        newItem->setText(i.key());
+        newItem->setText(i.key().toString("dd.MM.yyyy"));
         ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, 0, newItem);
 
         newItem = new QTableWidgetItem();

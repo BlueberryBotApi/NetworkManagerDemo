@@ -4,11 +4,11 @@ CurrencyParser::CurrencyParser(QObject* parent)
     : QObject {parent}
 {
     this->currencyCodes = QMap<QString,QString>();
-    this->quoteByDate =  QMap<QString,QString>();
+    this->quoteByDate =  QMap<QDate,QString>();
+
 }
 CurrencyParser::~CurrencyParser()
 {
-    delete this->pNetworkManager;
 }
 
 void CurrencyParser::sendCurrencyRequest()
@@ -66,7 +66,7 @@ void CurrencyParser::onCurrencyRequestFinished(QNetworkReply *reply) {
     emit CurrencyIsReady(currencyCodes);
 }
 
-void CurrencyParser::sendQuoteRequest(QString startDateOfvalue, QString endDateOfvalue, QString nameOfCurrency)
+void CurrencyParser::sendQuoteRequest(QString &startDateOfvalue, QString &endDateOfvalue, QString &nameOfCurrency)
 {
     this->pNetworkManager = new QNetworkAccessManager();
     connect( this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onQuoteRequestFinished(QNetworkReply*)) );
@@ -88,7 +88,8 @@ void CurrencyParser::onQuoteRequestFinished(QNetworkReply* reply)
 
         QString string = xmlToString(reply->readAll());
 
-        QString buf, date;
+        QString buf;
+        QDate date;
         int i = 0, j = 0;
         while (i != -1)
         {
@@ -103,7 +104,7 @@ void CurrencyParser::onQuoteRequestFinished(QNetworkReply* reply)
                     i++;
                 }
                 j = i;
-                date = buf;
+                date = date.fromString(buf,"dd.MM.yyyy");
                 buf = "";
                 i = string.indexOf("Value", j);
                 i += 6;
