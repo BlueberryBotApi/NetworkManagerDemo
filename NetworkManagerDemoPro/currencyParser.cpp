@@ -5,15 +5,16 @@ CurrencyParser::CurrencyParser(QObject* parent)
 {
     this->currencyCodes = QMap<QString,QString>();
     this->quoteByDate =  QMap<QDate,QString>();
+    this->pNetworkManager = new QNetworkAccessManager();
 
 }
 CurrencyParser::~CurrencyParser()
 {
+    delete this->pNetworkManager;
 }
 
 void CurrencyParser::sendCurrencyRequest()
 {
-    this->pNetworkManager = new QNetworkAccessManager();
     connect( this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onCurrencyRequestFinished(QNetworkReply*)) );
 
     pNetworkManager->get(QNetworkRequest(this->linkCurrency));
@@ -24,6 +25,7 @@ void CurrencyParser::onCurrencyRequestFinished(QNetworkReply *reply) {
     {
         qDebug() << reply->errorString();
         reply->deleteLater();
+        this->pNetworkManager->deleteLater();
         return ;
     }
 
@@ -61,14 +63,13 @@ void CurrencyParser::onCurrencyRequestFinished(QNetworkReply *reply) {
 
     reply->deleteLater();
 
-    this->pNetworkManager->deleteLater();
+    disconnect(this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onCurrencyRequestFinished(QNetworkReply*)) );
 
     emit CurrencyIsReady(currencyCodes);
 }
 
 void CurrencyParser::sendQuoteRequest(QString &startDateOfvalue, QString &endDateOfvalue, QString &nameOfCurrency)
 {
-    this->pNetworkManager = new QNetworkAccessManager();
     connect( this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onQuoteRequestFinished(QNetworkReply*)) );
 
     this->pNetworkManager->get(QNetworkRequest(QUrl(this->linkQuotePrefix +
@@ -120,7 +121,7 @@ void CurrencyParser::onQuoteRequestFinished(QNetworkReply* reply)
 
     reply->deleteLater();
 
-    this->pNetworkManager->deleteLater();
+    disconnect(this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onQuoteRequestFinished(QNetworkReply*)) );
 
     emit QuoteIsReady(quoteByDate);
 }
