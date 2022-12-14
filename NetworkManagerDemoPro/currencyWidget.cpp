@@ -1,7 +1,5 @@
 #include "currencyWidget.h"
 #include "ui_currencyWidget.h"
-
-
 #include <QNetworkReply>
 
 CurrencyWidget::CurrencyWidget(QWidget* parent) :
