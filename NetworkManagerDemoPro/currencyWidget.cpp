@@ -15,6 +15,7 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
 
     this->pCurrencyParser = new CurrencyParser();
     pCurrencyParser->sendCurrencyRequest();
+
     connect( pCurrencyParser, &CurrencyParser::CurrencyIsReady, this, &CurrencyWidget::onCurrencyMapIsReady);
 
     connect(ui->bnFind, SIGNAL(clicked(bool)), SLOT(onGo()) );

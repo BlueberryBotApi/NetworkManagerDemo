@@ -23,7 +23,7 @@ public:
 
 public:
     void sendCurrencyRequest();
-    void sendQuoteRequest(QString &startDateOfvalue, QString &endDateOfvalue, QString &nameOfCurrency);
+    void sendQuoteRequest(const QString &startDateOfvalue,const QString &endDateOfvalue,const QString &nameOfCurrency);
 
 private:
     QString xmlToString(QByteArray xml);

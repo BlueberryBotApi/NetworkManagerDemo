@@ -3,8 +3,7 @@
 CurrencyParser::CurrencyParser(QObject* parent)
     : QObject {parent}
 {
-    this->currencyCodes = QMap<QString,QString>();
-    this->quoteByDate =  QMap<QDate,QString>();
+
     this->pNetworkManager = new QNetworkAccessManager();
 
 }
@@ -68,7 +67,7 @@ void CurrencyParser::onCurrencyRequestFinished(QNetworkReply *reply) {
     emit CurrencyIsReady(currencyCodes);
 }
 
-void CurrencyParser::sendQuoteRequest(QString &startDateOfvalue, QString &endDateOfvalue, QString &nameOfCurrency)
+void CurrencyParser::sendQuoteRequest(const QString &startDateOfvalue,const QString &endDateOfvalue,const QString &nameOfCurrency)
 {
     connect( this->pNetworkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onQuoteRequestFinished(QNetworkReply*)) );
 
