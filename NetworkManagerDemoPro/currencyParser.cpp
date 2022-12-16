@@ -24,7 +24,8 @@ void CurrencyParser::onCurrencyRequestFinished(QNetworkReply *reply) {
     {
         qDebug() << reply->errorString();
         reply->deleteLater();
-        this->pNetworkManager->deleteLater();
+        emit CurrencyIsReady(currencyCodes);
+        //this->pNetworkManager->deleteLater();
         return ;
     }
 

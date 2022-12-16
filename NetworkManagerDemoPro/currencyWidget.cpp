@@ -29,8 +29,16 @@ CurrencyWidget::~CurrencyWidget() {
 
 void CurrencyWidget::onCurrencyMapIsReady(QMap<QString,QString> map)
 {
-    this->currencyCodes = map;
-    this->makeComboBox();
+    if(map.isEmpty())
+    {
+        ui->errorString->setText("Проблемы с сетью, дальнейшая работа невозможна");
+    }
+    else
+    {
+        this->currencyCodes = map;
+        this->makeComboBox();
+    }
+
 }
 
 void CurrencyWidget::onGo() {
