@@ -1,7 +1,10 @@
 #include "currencyWidget.h"
 #include "ui_currencyWidget.h"
-#include <QNetworkReply>
-
+#include <QDateTimeAxis>
+#include <QLineSeries>
+#include <QChart>
+#include <QValueAxis>
+#include <QGraphicsScene>
 CurrencyWidget::CurrencyWidget(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::CurrencyWidget) {
@@ -87,3 +90,23 @@ void CurrencyWidget::makeTable()
 
     ui->bnFind->setEnabled(true);
 }
+ void CurrencyWidget::makeTimetable()
+ {
+//     QMap<QDate, QString>::const_iterator i;
+     QtCharts::QLineSeries *series = new QtCharts::QLineSeries();
+     QGraphicsScene scene;
+//     QDateTime time;
+//     time.setDate(i.key());
+//     series->append(time.toMSecsSinceEpoch(),i.value().toDouble());
+
+    QMap<QDate, QString>::const_iterator i;
+    for (i = this->quoteByDate.constBegin(); i != this->quoteByDate.constEnd(); i++) {
+        QDateTime time;
+        time.setDate(i.key());
+
+        series->append(time.toMSecsSinceEpoch(),i.value().toDouble());
+    }
+
+
+  series->deleteLater();
+ }
