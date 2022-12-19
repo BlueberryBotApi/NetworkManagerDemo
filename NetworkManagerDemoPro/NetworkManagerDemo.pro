@@ -1,22 +1,18 @@
-QT       += core gui network widgets charts
+QT       += core gui network
 
-greaterThan(QT_MAJOR_VERSION, 4):
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = NetworkManagerDemo
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        ../qcustomplot/qcustomplot.cpp \
         currencyParser.cpp \
-        currencyWidget.cpp \
-        qcustomplot.cpp
+        currencyWidget.cpp
 
 HEADERS  += \
-    ../qcustomplot/qcustomplot.h \
     currencyParser.h \
-    currencyWidget.h \
-    qcustomplot.h
+    currencyWidget.h
 
 FORMS    += \
     currencyWidget.ui

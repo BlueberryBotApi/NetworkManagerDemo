@@ -2,11 +2,7 @@
 #define CURRENCYWIDGET_H
 
 #include "currencyParser.h"
-//#include <QtCharts/QChartView>
-//#include <QtCharts/QLineSeries>
-//#include <QtCharts/QDateTimeAxis>
-//#include <QtCharts/QValueAxis>
-//#include <QLineSeries>
+
 // should see this change in git
 
 namespace Ui {
@@ -28,7 +24,6 @@ private slots:
     void onQuoteMapIsReady(QMap<QDate,QString> map);
     void onCurrencyMapIsReady(QMap<QString,QString> map);
     void makeTable();
-    void makeTimetable();
 
 private:
     QMap <QString,QString> currencyCodes;
