@@ -175,7 +175,7 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
-   <widget class="QGraphicsView" name="graphicsView"/>
+   <widget class="QCustomPlot" name="graphicsView"/>
    <widget class="QTableWidget" name="tableWidget">
     <property name="enabled">
      <bool>true</bool>
@@ -203,6 +203,13 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QGraphicsView</extends>
+   <header>qcustomplot.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

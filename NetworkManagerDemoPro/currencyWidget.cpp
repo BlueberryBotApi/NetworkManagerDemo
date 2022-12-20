@@ -10,7 +10,18 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
     ui->bnFind->setEnabled(false);
     ui->calendarWidget->setMaximumDate(QDate::currentDate());
     ui->calendarWidget_2->setMaximumDate(QDate::currentDate());
+    //настройки графика
+    ui->graphicsView->setInteraction(QCP::iRangeZoom,true);
+    ui->graphicsView->setInteraction(QCP::iRangeDrag,true);
+    ui->graphicsView->axisRect()->setRangeZoom(Qt::Horizontal);
+    ui->graphicsView->axisRect()->setRangeDrag(Qt::Horizontal);
 
+    QSharedPointer<QCPAxisTickerDateTime> dateTimeTicker(new QCPAxisTickerDateTime);
+    ui->graphicsView->xAxis->setTicker(dateTimeTicker);
+    dateTimeTicker->setDateTimeFormat("d. MMMM\nyyyy");
+
+
+    //
     this->quoteByDate = QMap<QDate,QString>();
 
     this->pCurrencyParser = new CurrencyParser();

@@ -2,6 +2,7 @@
 #define CURRENCYWIDGET_H
 
 #include "currencyParser.h"
+#include "qcustomplot.h"
 
 // should see this change in git
 
