@@ -29,12 +29,15 @@ private:
     QString xmlToString(QByteArray xml);
 
 private slots:
-    void onCurrencyRequestFinished(QNetworkReply* reply);
-    void onQuoteRequestFinished(QNetworkReply* reply);
+    void onCurrencyRequestFinished(const QString &string);
+    void onQuoteRequestFinished(const QString &string);
+    void switchBlock (QNetworkReply* reply);
 
 signals:
     void CurrencyIsReady(QMap<QString,QString>);
     void QuoteIsReady(QMap<QDate,QString>);
+    void Quote(QString);
+    void CodesOfCurrency(QString);
 
 private:
     QNetworkAccessManager* pNetworkManager;

@@ -18,7 +18,7 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
 
     QSharedPointer<QCPAxisTickerDateTime> dateTimeTicker(new QCPAxisTickerDateTime);
     ui->graphicsView->xAxis->setTicker(dateTimeTicker);
-    dateTimeTicker->setDateTimeFormat("d. MMMM\nyyyy");
+    dateTimeTicker->setDateTimeFormat("d. MMMM \n yyyy");
 
 
     //
@@ -27,6 +27,7 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
     this->pCurrencyParser = new CurrencyParser();
     pCurrencyParser->sendCurrencyRequest();
 
+
     connect( pCurrencyParser, &CurrencyParser::CurrencyIsReady, this, &CurrencyWidget::onCurrencyMapIsReady);
 
     connect(ui->bnFind, SIGNAL(clicked(bool)), SLOT(onGo()) );
@@ -34,6 +35,7 @@ CurrencyWidget::CurrencyWidget(QWidget* parent) :
 }
 
 CurrencyWidget::~CurrencyWidget() {
+
     delete ui;
     delete this->pCurrencyParser;
 }
@@ -66,6 +68,7 @@ void CurrencyWidget::onGo() {
 
 void CurrencyWidget::onQuoteMapIsReady(QMap<QDate,QString> map) {
     this->quoteByDate = map;
+    this->pCurrencyParser->quoteByDate.clear();
     this->makeTable();
 }
 
@@ -95,6 +98,6 @@ void CurrencyWidget::makeTable()
         newItem->setText(i.value());
         ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, 1, newItem);
     }
-
+    this->quoteByDate.clear();
     ui->bnFind->setEnabled(true);
 }
